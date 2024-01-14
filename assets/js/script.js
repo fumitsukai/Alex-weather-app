@@ -16,15 +16,15 @@ const searchInput = $('#search-input');
 
 searchBtn.on('click', function (e) {
     e.preventDefault();
-
-    fetchData("London");
-    //showData();
+    fetchData("London").then((w) => {
+        showData(w);
+    });
 })
 
 function fetchData(city) {
     //get the long and lat using geolocation API
     const geoQueryURL = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${APIKey}`
-    fetch(geoQueryURL)
+    return fetch(geoQueryURL)
         .then(function (response) {
             return response.json();
         })
@@ -33,29 +33,42 @@ function fetchData(city) {
             const lon = data[0].lon;
             //use that lat and lon to find the city and fetch that data
             const queryURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${APIKey}`
-            fetch(queryURL)
+            return fetch(queryURL)
                 .then(function (response) {
                     return response.json();
                 })
                 .then(function (data) {
+                    console.log(data);
                     //grab weather icon,temp,wind and humidity
                     const weather = {
-                    icon : data.weather.icon,
-                    temp : data.main.temp,
-                    wind : data.win.speed,
-                    humidity : data.main.humidity
+                        name: data.name,
+                        icon: data.weather[0].icon,
+                        temp: data.main.temp,
+                        wind: data.wind.speed,
+                        humidity: data.main.humidity
                     }
+                    console.log(weather);
                     return weather;
                 })
         })
+        
 }
 
 function showData(weather) {
     //create element in which to store all data
     const divEl = $('<div>');
     //create element for temp
-    const temp
+    const temp = $('<p>').text(`${weather.temp} °C`);
     //create element for wind
+    const wind = $('<p>').text(`${weather.wind} Kmh`);
     //create element for humidity
+    const humidity = $('<p>').text(`${weather.humidity} %`);
     //create element for icon
+    const icon = $('<img>').attr('src', `https://openweathermap.org/img/wn/${weather.icon}.png`);
+    //create element for city name
+    const cityName = $('<h3>').text(weather.name);
+
+    //append all elements to the div
+    divEl.append(cityName, temp, icon, wind, humidity);
+    $('body').append(divEl);
 }
