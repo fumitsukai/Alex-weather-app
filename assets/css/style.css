@@ -3,15 +3,17 @@
     --grey: #eee;
     --lightblue: #7bc7dd;
 }
+
 /*forecast section style*/
-#forecast{
+#forecast {
     display: flex;
     justify-content: flex-start;
     flex-direction: row;
     flex-wrap: nowrap;
 }
+
 #forecast>div {
-    width:18%;
+    width: 18%;
     background-color: var(--blue);
     margin: 10px;
     color: var(--grey);
@@ -46,13 +48,14 @@
     border-radius: 10px;
     background-color: var(--grey);
 }
+
 .list-group {
     margin-top: 10px;
 }
 
 /* current weather */
 
-#today > div {
+#today>div {
     border: 2px solid var(--blue);
     padding: 20px;
     background-color: var(--lightblue);
@@ -64,8 +67,8 @@
     font-weight: bold;
 }
 
-#today >div> img {
+#today>div>img {
     position: absolute;
     top: 2.8rem;
-    left:7.5em;
+    left: 7.5em;
 }
