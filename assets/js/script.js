@@ -108,6 +108,7 @@ function showData(weather, forecast) {
     const date = $('<p>').text(dayjs.unix(weather.date).format('DD-MM-YYYY'));
     //append all elements to the div
     divEl.append(cityName, date, icon, temp, wind, humidity);
+    //append the div based on what we need current or forecast
     forecast.append(divEl);
 }
 
@@ -134,6 +135,8 @@ function searchHistory() {
         historyCol.append(search);
     }
 }
+
+//event to fetch and show data once we click on one of the search history buttons
 historyCol.on('click', '.searchbtn', function (e) {
     e.preventDefault();
     $('section').children().remove();
@@ -146,3 +149,7 @@ historyCol.on('click', '.searchbtn', function (e) {
         }
     });
 })
+
+//clear local storage on page load
+
+window.onload = window.localStorage.clear();

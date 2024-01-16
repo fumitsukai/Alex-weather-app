@@ -1,9 +1,71 @@
-section {
+:root {
+    --blue: #528ab4;
+    --grey: #eee;
+    --lightblue: #7bc7dd;
+}
+/*forecast section style*/
+#forecast{
     display: flex;
-    flex-direction: column;
     justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+#forecast>div {
+    width:18%;
+    background-color: var(--blue);
+    margin: 10px;
+    color: var(--grey);
+    padding: 10px;
+    border-radius: 10px;
 }
 
-section > div {
-    align-self: flex-start;
+/* header style */
+
+.weather-header {
+    background-color: var(--blue);
+}
+
+/* input box style */
+
+.weather-search {
+    height: 3em;
+}
+
+/* search button style */
+
+.search-button {
+    height: 3em;
+    background-color: var(--blue);
+    color: var(--grey);
+}
+
+/* search history buttons */
+
+.searchbtn {
+    margin: 5px 0 5px 0;
+    border-radius: 10px;
+    background-color: var(--grey);
+}
+.list-group {
+    margin-top: 10px;
+}
+
+/* current weather */
+
+#today > div {
+    border: 2px solid var(--blue);
+    padding: 20px;
+    background-color: var(--lightblue);
+    position: relative;
+    border-radius: 10px;
+}
+
+#today>div>:nth-child(2) {
+    font-weight: bold;
+}
+
+#today >div> img {
+    position: absolute;
+    top: 2.8rem;
+    left:7.5em;
 }
