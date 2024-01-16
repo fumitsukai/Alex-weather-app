@@ -10,12 +10,8 @@ const searchBtn = $('#search-button');
 const searchInput = $('#search-input');
 const todayScn = $('#today');
 const forecastScn = $('#forecast');
+const historyCol = $('#history');
 
-//datjs variables
-
-const currentDay = dayjs().format('DD-MM-YYYY');
-const nextDay = dayjs().add(1,'d').unix();
-console.log(nextDay);
 
 //Press submit button and fetch data based on searchinput and show it on the screen
 
@@ -31,8 +27,8 @@ searchBtn.on('click', function (e) {
         showData(w, todayScn);
     });
     fetchData(searchInput.val(), "forecast").then((w) => {
-        for (let i = 0; i <  w.length; i++) {
-        showData(w[i], forecastScn);
+        for (let i = 0; i < w.length; i++) {
+            showData(w[i], forecastScn);
         }
     });
     saveSearch(searchInput.val().trim());
@@ -58,7 +54,6 @@ function fetchData(city, forecast) {
                         return response.json();
                     })
                     .then(function (data) {
-                        console.log(data);
                         //grab weather icon,temp,wind and humidity
                         const weather = {
                             name: data.name,
@@ -76,21 +71,19 @@ function fetchData(city, forecast) {
                         return response.json();
                     })
                     .then(function (data) {
-                        console.log(data);
                         const weatherArr = [];
                         //grab weather icon,temp,wind and humidity 
                         //we are getting 40 items in the api array so we will need to start at index 7 which is 24h after and go up by 8
                         for (let i = 7; i < data.list.length; i += 8) {
-                        const weather = {
-                            date: data.list[i].dt,
-                            icon: data.list[i].weather[0].icon,
-                            temp: data.list[i].main.temp,
-                            wind: data.list[i].wind.speed,
-                            humidity: data.list[i].main.humidity
+                            const weather = {
+                                date: data.list[i].dt,
+                                icon: data.list[i].weather[0].icon,
+                                temp: data.list[i].main.temp,
+                                wind: data.list[i].wind.speed,
+                                humidity: data.list[i].main.humidity
+                            }
+                            weatherArr.push(weather);
                         }
-                        weatherArr.push(weather);
-                    }
-                        console.log(weatherArr);
                         return weatherArr;
                     })
             }
@@ -114,7 +107,7 @@ function showData(weather, forecast) {
     //create date variable
     const date = $('<p>').text(dayjs.unix(weather.date).format('DD-MM-YYYY'));
     //append all elements to the div
-    divEl.append(cityName,date,icon,temp, wind, humidity);
+    divEl.append(cityName, date, icon, temp, wind, humidity);
     forecast.append(divEl);
 }
 
@@ -122,8 +115,8 @@ function showData(weather, forecast) {
 
 function saveSearch(input) {
     const searchHistory = JSON.parse(localStorage.getItem('search')) || [];
-    if(!searchHistory.includes(input) && input != null) {
-    searchHistory.push(input);
+    if (!searchHistory.includes(input) && input != null) {
+        searchHistory.push(input);
     }
     localStorage.setItem('search', JSON.stringify(searchHistory));
     return searchHistory;
@@ -134,11 +127,22 @@ function searchHistory() {
     //remove white spaces in case someone has clicked on the search button by mistake
     const storageData = saveSearch().filter(e => e.trim() != '');
     //empty the buttons area so we dont have duplicates
-    $('#history').empty();
-    console.log(storageData);
-    for(data in storageData) {
+    historyCol.empty();
+    for (data in storageData) {
         //create buttons
         const search = $('<button>').text(storageData[data]).addClass('searchbtn');
-        $('#history').append(search);
+        historyCol.append(search);
     }
 }
+historyCol.on('click', '.searchbtn', function (e) {
+    e.preventDefault();
+    $('section').children().remove();
+    fetchData($(this).text(), "weather").then((w) => {
+        showData(w, todayScn);
+    });
+    fetchData($(this).text(), "forecast").then((w) => {
+        for (let i = 0; i < w.length; i++) {
+            showData(w[i], forecastScn);
+        }
+    });
+})
